@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Школьный альбом — 1936–2026</title>
+  <style>
+    /* ===== НАСТРОЙКИ: меняйте эти значения для быстрой настройки альбома ===== */
+    :root {
+      --flip-speed: 800ms;
+      --book-width: 1120px;
+      --book-height: 420px;
+      --paper: #f7f1df;
+      --paper-edge: #e4d7bd;
+      --ink: #26342e;
+      --green: #183c32;
+      --gold: #c6a66a;
+      --panel: #17231f;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Segoe UI", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-width: 320px; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 50% 42%, rgba(222, 200, 151, .12), transparent 30%),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.012) 0 1px, transparent 1px 5px),
+        #111917;
+      font-family: var(--sans);
+    }
+
+    .stage {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr 76px;
+      align-items: end;
+    }
+    .book-area {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 18px 24px 8px;
+    }
+    #book {
+      filter: drop-shadow(0 28px 24px rgba(0,0,0,.52));
+    }
+
+    /* ===== Стили страниц ===== */
+    .page {
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(94,65,36,.06), transparent 10%, transparent 88%, rgba(94,65,36,.09)),
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.38), transparent 24%),
+        var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--paper-edge);
+      font-family: var(--serif);
+    }
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .18;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.55' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+    }
+    .page-inner {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 46% 54%;
+      align-items: stretch;
+      padding: 34px 32px 28px;
+    }
+    .page-inner.text-only { grid-template-columns: 1fr; }
+    .page-inner.reverse { grid-template-columns: 54% 46%; }
+    .copy {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4px 28px 4px 4px;
+    }
+    .reverse .copy { padding: 4px 4px 4px 28px; }
+    .kicker {
+      margin-bottom: 9px;
+      color: #9a7a43;
+      font-family: var(--sans);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    h1, h2 {
+      margin: 0 0 15px;
+      color: var(--green);
+      font-size: 34px;
+      line-height: 1.04;
+      font-weight: 400;
+    }
+    h2 { font-size: 30px; }
+    p {
+      margin: 0 0 10px;
+      color: #526158;
+      font-family: var(--serif);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .lead {
+      color: #34463d;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+    .photo {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+    }
+    .photo-card {
+      width: 94%;
+      max-height: 320px;
+      padding: 8px 8px 23px;
+      background: #fffdf7;
+      box-shadow: 0 12px 24px rgba(66,48,27,.18);
+      transform: rotate(-1deg);
+    }
+    .reverse .photo-card { transform: rotate(1deg); }
+    .photo-card img {
+      display: block;
+      width: 100%;
+      height: 270px;
+      object-fit: cover;
+    }
+    .caption {
+      height: 15px;
+      margin-top: 7px;
+      color: #806f55;
+      font-size: 10px;
+      font-style: italic;
+      text-align: center;
+    }
+    .page-number {
+      position: absolute;
+      z-index: 2;
+      right: 22px;
+      bottom: 10px;
+      color: #9b927e;
+      font-size: 10px;
+    }
+    .left-page .page-number { right: auto; left: 22px; }
+    .timeline {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px 18px;
+      margin-top: 12px;
+    }
+    .timeline-item {
+      border-top: 1px solid rgba(154,122,67,.35);
+      padding-top: 7px;
+    }
+    .timeline-item b { color: #9a7a43; }
+
+    /* ===== Обложки ===== */
+    .cover {
+      display: grid;
+      place-items: center;
+      color: #f7edcf;
+      text-align: center;
+      background:
+        radial-gradient(circle at 50% 48%, rgba(72,118,96,.44), transparent 30%),
+        linear-gradient(145deg, #234c3d, #10291f);
+      border: 9px solid #18372d;
+      outline: 1px solid var(--gold);
+      outline-offset: -15px;
+    }
+    .cover-inner {
+      width: 78%;
+      min-height: 72%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .cover-mark {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      color: var(--gold);
+      font-size: 23px;
+    }
+    .cover h1 { color: #fff8df; font-size: 52px; }
+    .cover h1 span { display: block; color: var(--gold); font-family: var(--sans); font-size: 13px; letter-spacing: .26em; margin-top: 10px; }
+    .cover-rule { width: 54px; height: 1px; margin: 12px 0 14px; background: var(--gold); }
+    .cover-years { color: #e4cf9c; font-size: 17px; letter-spacing: .12em; }
+    .cover h1 {
+      margin: 0;
+      color: #fff8df;
+      font-family: var(--serif);
+      font-size: clamp(30px, 5vw, 54px);
+      font-weight: 400;
+      text-align: center;
+    }
+    .cover h1 span {
+      display: block;
+      margin-top: 10px;
+      color: var(--gold);
+      font-family: var(--sans);
+      font-size: 12px;
+      letter-spacing: .22em;
+    }
+    .cover h2 {
+      margin: 0;
+      color: #fff8df;
+      font-family: var(--serif);
+      font-size: clamp(24px, 4vw, 42px);
+      font-weight: 400;
+      text-align: center;
+    }
+    .cover-end {
+      margin-top: 18px;
+      color: #ddc895;
+      font-family: var(--sans);
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .close-book-btn {
+      margin-top: 20px;
+      height: 40px;
+      padding: 0 14px;
+      border-color: rgba(198,166,106,.55);
+    }
+    .photo-grid {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: minmax(0, 1fr);
+      gap: 10px;
+      padding: 18px;
+    }
+    .photo-grid figure {
+      min-width: 0;
+      min-height: 0;
+      margin: 0;
+      overflow: hidden;
+      background: #fffdf7;
+      box-shadow: 0 7px 16px rgba(66,48,27,.16);
+    }
+    .photo-grid figure:nth-child(odd) { transform: rotate(-.35deg); }
+    .photo-grid figure:nth-child(even) { transform: rotate(.35deg); }
+    .photo-grid img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .photo-grid.one { grid-template-columns: 1fr; }
+    .photo-grid.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .photo-grid.three figure:first-child {
+      grid-column: 1 / -1;
+    }
+    .back-cover { background: linear-gradient(145deg, #10291f, #1f4638); }
+    .back-cover h2 { color: #f7edcf; }
+
+    /* ===== Нижняя панель ===== */
+    .toolbar {
+      position: relative;
+      z-index: 100;
+      height: 76px;
+      display: grid;
+      grid-template-columns: minmax(180px,1fr) minmax(300px,520px) minmax(180px,1fr);
+      align-items: center;
+      gap: 16px;
+      padding: 10px 18px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(18,29,25,.96);
+      border-top: 1px solid rgba(198,166,106,.24);
+      box-shadow: 0 -12px 30px rgba(0,0,0,.24);
+      backdrop-filter: blur(14px);
+    }
+    .nav-group, .action-group { display: flex; align-items: center; gap: 8px; }
+    .action-group { justify-content: flex-end; }
+    button {
+      height: 42px;
+      border: 1px solid rgba(236,226,203,.16);
+      border-radius: 8px;
+      color: #efe8d7;
+      background: #26352f;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+    button:hover { border-color: rgba(198,166,106,.72); background: #30443b; }
+    button:disabled { opacity: .38; cursor: default; }
+    .nav-btn { width: 78px; }
+    .small-btn { padding: 0 12px; font-size: 12px; }
+    .counter { min-width: 118px; color: #d7cbaa; font-size: 12px; text-align: center; }
+    .range-wrap { display: flex; align-items: center; gap: 10px; }
+    #pageRange { width: 100%; accent-color: var(--gold); cursor: pointer; }
+    #blockSelect {
+      width: 112px;
+      height: 42px;
+      padding: 0 8px;
+      color: #efe8d7;
+      background: #26352f;
+    }
+    .timing-control {
+      min-width: 150px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #d7cbaa;
+      font-size: 11px;
+    }
+    #flipTiming { width: 92px; accent-color: var(--gold); cursor: pointer; }
+    #autoFlipBtn.is-active {
+      border-color: rgba(198,166,106,.85);
+      color: #1a251f;
+      background: var(--gold);
+    }
+
+    @media (max-height: 720px) {
+      .book-area { padding-top: 8px; }
+      .toolbar { height: 68px; }
+      .stage { grid-template-rows: 1fr 68px; }
+    }
+    @media (max-width: 760px) {
+      body { overflow: hidden; }
+      .stage { grid-template-rows: 1fr 118px; }
+      .book-area { padding: 8px 4px; }
+      .toolbar {
+        height: 118px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 48px 48px;
+        gap: 6px;
+        padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+      }
+      .range-wrap { grid-column: 1 / -1; grid-row: 2; }
+      .nav-group { grid-column: 1; grid-row: 1; }
+      .action-group { grid-column: 2; grid-row: 1; }
+      .nav-btn { width: 62px; }
+      .small-btn { padding: 0 8px; }
+      .counter { min-width: 96px; }
+      #blockSelect { width: 92px; }
+      .timing-control { min-width: 118px; }
+      #flipTiming { width: 64px; }
+      .page-inner { padding: 25px 22px 24px; grid-template-columns: 42% 58%; }
+      h1 { font-size: 25px; }
+      h2 { font-size: 23px; }
+      p { font-size: 11px; line-height: 1.42; }
+      .lead { font-size: 13px; }
+      .copy { padding-right: 14px; }
+      .photo-card img { height: 220px; }
+      .cover h1 { font-size: 38px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <section class="book-area" aria-label="Интерактивный школьный альбом">
+      <div id="book"></div>
+    </section>
+
+    <nav class="toolbar" aria-label="Управление альбомом">
+      <div class="nav-group">
+        <button id="prevBtn" class="nav-btn" type="button" aria-label="Предыдущая страница">Назад</button>
+        <span id="counter" class="counter">Обложка</span>
+        <button id="nextBtn" class="nav-btn" type="button" aria-label="Следующая страница">Вперёд</button>
+      </div>
+
+      <div class="range-wrap">
+        <button id="startBtn" class="small-btn" type="button">В начало</button>
+        <input id="pageRange" type="range" min="0" max="9" value="0" aria-label="Перейти к странице">
+        <select id="blockSelect" class="small-btn" aria-label="Выбрать блок">
+          <option value="all">Все блоки</option>
+          <option value="1">Блок 1</option>
+          <option value="2">Блок 2</option>
+          <option value="3">Блок 3</option>
+          <option value="4">Блок 4</option>
+          <option value="6">Блок 6</option>
+          <option value="7">Блок 7</option>
+          <option value="8">Блок 8</option>
+        </select>
+        <label class="timing-control" title="Длительность перелистывания">
+          <input id="flipTiming" type="range" min="300" max="10000" step="100" value="800" aria-label="Длительность перелистывания">
+          <span id="timingValue">0.8 с</span>
+        </label>
+      </div>
+
+      <div class="action-group">
+        <button id="fullscreenBtn" class="small-btn" type="button">На весь экран</button>
+        <button id="autoFlipBtn" class="small-btn" type="button" aria-label="Автоперелистывание">Авто ▶</button>
+      </div>
+    </nav>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+  <script>
+    // ===== ФОТОБЛОКИ =====
+    // Здесь собраны все фотографии из папок «ФОТО ПО БЛОКАМ».
+    // На одной странице размещается до 4 фотографий.
+    const blockSpecs = [
+      {
+        block: "1 БЛОК",
+        prefix: "1 БЛОК",
+        ext: ["webp","jpg","jpg","jpg","jpeg","jpg","jpg","jpg","jpg","jpeg"],
+        count: 10
+      },
+      {
+        block: "2 БЛОК",
+        prefix: "2 БЛОК",
+        ext: ["webp","jpg","jpg","jpeg","jpeg"],
+        count: 5
+      },
+      {
+        block: "3 БЛОК",
+        prefix: "4 БЛОК",
+        ext: ["jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg"],
+        offset: 0,
+        count: 7
+      },
+      {
+        block: "4 БЛОК",
+        prefix: "4 БЛОК",
+        ext: ["jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg"],
+        offset: 7,
+        count: 15
+      },
+      {
+        block: "6 БЛОК",
+        prefix: "6 БЛОК",
+        ext: ["jpeg","jpg","jpg","jpg","jpeg","jpg","jpg","jpg","jpg","jpg","jpg","jpg","jpg"],
+        count: 13
+      },
+      {
+        block: "7 БЛОК КАПРЕМОНТ",
+        prefix: "7 БЛОК КАПРЕМОНТ",
+        ext: Array(9).fill("jpg"),
+        count: 9
+      },
+      {
+        block: "8 БЛОК фото родители",
+        prefix: "8 БЛОК фото родители",
+        ext: Array(12).fill("jpg"),
+        count: 12
+      }
+    ];
+
+    const book = document.getElementById("book");
+
+    // Обложка спереди — без текста и декоративных заголовков
+    const frontCover = document.createElement("div");
+    frontCover.className = "page cover";
+    frontCover.dataset.density = "hard";
+    frontCover.innerHTML = `
+      <div class="cover-inner">
+        <h1>Школьный альбом
+          <span>ШКОЛА №10 · ВИЧУГА · 1936—2026</span>
+        </h1>
+      </div>`;
+    book.appendChild(frontCover);
+
+    const blockRanges = {};
+    let blockPageIndex = 1;
+
+    blockSpecs.forEach((spec) => {
+      blockRanges[spec.block] = blockPageIndex;
+      const photos = [];
+      const offset = Number(spec.offset || 0);
+      for (let i = offset + 1; i <= offset + spec.count; i++) {
+        const number = String(i).padStart(2, "0");
+        const fileName = `block-${spec.prefix}-photo-${number}.${spec.ext[i - 1]}`;
+        photos.push(`assets/${fileName}`);
+      }
+
+      // Каждая фотография размещается на отдельном листе.
+      const photosPerPage = 1;
+      for (let start = 0; start < photos.length; start += photosPerPage) {
+        const group = photos.slice(start, start + photosPerPage);
+        const photoClass = group.length === 1 ? "one" : "";
+        const page = document.createElement("div");
+        page.className = "page";
+        page.dataset.block = spec.block;
+        page.innerHTML = `
+          <div class="page-inner text-only">
+            <div class="photo-grid ${photoClass}">
+              ${group.map((image, imageIndex) => `
+                <figure>
+                  <img src="${image}" alt="" draggable="false">
+                </figure>
+              `).join("")}
+            </div>
+          </div>`;
+        book.appendChild(page);
+        blockPageIndex++;
+      }
+    });
+
+    // Обложка сзади без текста
+    const backCover = document.createElement("div");
+    backCover.className = "page cover back-cover";
+    backCover.dataset.density = "hard";
+    backCover.innerHTML = `
+      <div class="cover-inner">
+        <h2>Конец альбома</h2>
+        <div class="cover-end">История продолжается</div>
+        <button class="close-book-btn" type="button" id="closeBookBtn">Закрыть альбом</button>
+      </div>`;
+    book.appendChild(backCover);
+
+    /* Старые текстовые разметки страниц не создаются:
+       каждая фотостраница содержит только изображения. */
+
+    /*
+    Параметры ниже используются для выбора первого листа блока.
+    Список оставлен для совместимости со старым счетчиком.
+    */
+    const pages = [];
+    blockSpecs.forEach((spec) => {
+      for (let i = 1; i <= spec.count; i++) pages.push({ block: spec.block });
+    });
+
+    // Инициализация StPageFlip
+    const pageFlip = new St.PageFlip(book, {
+      width: 560,
+      height: 420,
+      size: "stretch",
+      minWidth: 300,
+      maxWidth: 1120,
+      minHeight: 225,
+      maxHeight: 840,
+      maxShadowOpacity: 0.55,
+      showCover: true,
+      usePortrait: true,
+      startZIndex: 20,
+      flippingTime: 800,
+      mobileScrollSupport: false,
+      swipeDistance: 30,
+      clickEventForward: true
+    });
+    pageFlip.loadFromHTML(document.querySelectorAll("#book .page"));
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const startBtn = document.getElementById("startBtn");
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
+    const blockSelect = document.getElementById("blockSelect");
+    const flipTiming = document.getElementById("flipTiming");
+    const timingValue = document.getElementById("timingValue");
+    const autoFlipBtn = document.getElementById("autoFlipBtn");
+    const counter = document.getElementById("counter");
+    const range = document.getElementById("pageRange");
+    range.max = pageFlip.getPageCount() - 1;
+    let autoFlipTimer = null;
+    let autoStopIndex = pageFlip.getPageCount() - 2;
+
+    function getPageElements() {
+      return Array.from(document.querySelectorAll("#book .page"));
+    }
+
+    function getBlockAtIndex(index) {
+      const page = getPageElements()[index];
+      return page && page.dataset.block ? page.dataset.block : null;
+    }
+
+    function getVisibleBlock() {
+      const index = pageFlip.getCurrentPageIndex();
+      return getBlockAtIndex(index) || getBlockAtIndex(index + 1);
+    }
+
+    function getNextBlockStartIndex(currentIndex) {
+      const currentBlock = getVisibleBlock();
+      if (!currentBlock) {
+        const pages = getPageElements();
+        let firstBlock = null;
+        for (let i = currentIndex + 1; i < pages.length; i++) {
+          if (pages[i].dataset.block) {
+            firstBlock = pages[i].dataset.block;
+            break;
+          }
+        }
+        if (!firstBlock) return pages.length - 1;
+        for (let i = currentIndex + 1; i < pages.length; i++) {
+          if (pages[i].dataset.block && pages[i].dataset.block !== firstBlock) return i;
+        }
+        return pages.length - 1;
+      }
+      const pages = getPageElements();
+      for (let i = currentIndex + 1; i < pages.length; i++) {
+        const nextBlock = pages[i].dataset.block;
+        if (nextBlock && nextBlock !== currentBlock) return i;
+      }
+      return pages.length - 1;
+    }
+
+    function getBlockLastIndex(blockName) {
+      const pages = getPageElements();
+      let lastIndex = 1;
+      pages.forEach((page, index) => {
+        if (page.dataset.block === blockName) lastIndex = index;
+      });
+      return lastIndex;
+    }
+
+    function getBlockStartIndex(blockName) {
+      const pages = getPageElements();
+      const page = pages.find((item) => item.dataset.block === blockName);
+      return page ? pages.indexOf(page) : 1;
+    }
+
+    function stopAutoFlip() {
+      if (autoFlipTimer) {
+        window.clearTimeout(autoFlipTimer);
+        autoFlipTimer = null;
+      }
+      autoFlipBtn.classList.remove("is-active");
+      autoFlipBtn.textContent = "Авто ▶";
+    }
+
+    function startAutoFlip() {
+      stopAutoFlip();
+      autoFlipBtn.classList.add("is-active");
+      autoFlipBtn.textContent = "Авто ■";
+      const current = pageFlip.getCurrentPageIndex();
+      const blockNames = {
+        "1": "1 БЛОК",
+        "2": "2 БЛОК",
+        "3": "3 БЛОК",
+        "4": "4 БЛОК",
+        "6": "6 БЛОК",
+        "7": "7 БЛОК КАПРЕМОНТ",
+        "8": "8 БЛОК фото родители"
+      };
+      const activeBlock = blockSelect.value === "all"
+        ? getVisibleBlock()
+        : blockNames[blockSelect.value] || getVisibleBlock();
+
+      if (blockSelect.value === "all") {
+        // «Все блоки»: остановиться на последнем листе текущего блока.
+        const stopBlock = activeBlock || getBlockAtIndex(1);
+        autoStopIndex = stopBlock
+          ? getBlockLastIndex(stopBlock)
+          : pageFlip.getPageCount() - 2;
+      } else if (activeBlock) {
+        // Конкретный блок: остановиться на его последнем листе.
+        autoStopIndex = getBlockLastIndex(activeBlock);
+      } else {
+        autoStopIndex = pageFlip.getPageCount() - 2;
+      }
+
+      const scheduleNextFlip = () => {
+        const current = pageFlip.getCurrentPageIndex();
+        const last = pageFlip.getPageCount() - 1;
+        if (current >= autoStopIndex || current >= last) {
+          stopAutoFlip();
+        } else {
+          const portrait = pageFlip.getOrientation() === "portrait";
+          const step = portrait ? 1 : 2;
+          const nextIndex = current + step;
+          if (nextIndex >= autoStopIndex) {
+            pageFlip.flip(autoStopIndex);
+            stopAutoFlip();
+          } else {
+            pageFlip.flipNext();
+            const requestedDelay = Number(flipTiming.value);
+            const safeDelay = Math.max(requestedDelay, 800);
+            autoFlipTimer = window.setTimeout(scheduleNextFlip, safeDelay);
+          }
+        }
+      };
+      scheduleNextFlip();
+    }
+
+    function updateState() {
+      const index = pageFlip.getCurrentPageIndex();
+      const count = pageFlip.getPageCount();
+      const indexSafe = Math.max(0, index);
+
+      if (autoFlipTimer && indexSafe >= autoStopIndex) {
+        stopAutoFlip();
+      }
+
+      range.value = indexSafe;
+      prevBtn.disabled = indexSafe <= 0;
+      nextBtn.disabled = indexSafe >= count - 1;
+
+      const portrait = pageFlip.getOrientation() === "portrait";
+      if (indexSafe === 0) {
+        counter.textContent = "Обложка";
+      } else if (indexSafe === count - 1) {
+        counter.textContent = "Задняя обложка";
+      } else if (portrait) {
+        const photoPageCount = count - 2;
+        const pageNumber = Math.min(Math.max(indexSafe - 1, 1), photoPageCount);
+        counter.textContent = `Лист ${pageNumber} из ${photoPageCount}`;
+      } else {
+        const photoPageCount = count - 2;
+        const left = Math.min(Math.max(indexSafe - 1, 1), photoPageCount);
+        const right = Math.min(left + 1, photoPageCount);
+        counter.textContent = `Листы ${left}–${right} из ${photoPageCount}`;
+      }
+    }
+
+    pageFlip.on("flip", updateState);
+    pageFlip.on("changeOrientation", updateState);
+    pageFlip.on("changeState", updateState);
+    prevBtn.addEventListener("click", () => pageFlip.flipPrev());
+    nextBtn.addEventListener("click", () => pageFlip.flipNext());
+    startBtn.addEventListener("click", () => pageFlip.flip(0));
+    range.addEventListener("input", () => pageFlip.flip(Number(range.value)));
+    blockSelect.addEventListener("change", () => {
+      stopAutoFlip();
+      if (blockSelect.value === "all") {
+        pageFlip.flip(1);
+      } else {
+        const blockNames = {
+          "1": "1 БЛОК",
+          "2": "2 БЛОК",
+          "3": "3 БЛОК",
+          "4": "4 БЛОК",
+          "6": "6 БЛОК",
+          "7": "7 БЛОК КАПРЕМОНТ",
+          "8": "8 БЛОК фото родители"
+        };
+        pageFlip.flip(getBlockStartIndex(blockNames[blockSelect.value]));
+      }
+    });
+    flipTiming.addEventListener("input", () => {
+      const milliseconds = Number(flipTiming.value);
+      timingValue.textContent = `${(milliseconds / 1000).toFixed(1).replace(".0", "")} с`;
+      if (autoFlipTimer) startAutoFlip();
+      if (typeof pageFlip.update === "function") {
+        pageFlip.update({ flippingTime: milliseconds });
+      }
+    });
+    autoFlipBtn.addEventListener("click", () => {
+      if (autoFlipTimer) stopAutoFlip();
+      else startAutoFlip();
+    });
+    document.getElementById("closeBookBtn").addEventListener("click", (event) => {
+      event.stopPropagation();
+      stopAutoFlip();
+      pageFlip.flip(0);
+    });
+
+    fullscreenBtn.addEventListener("click", async () => {
+      try {
+        if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+        else await document.exitFullscreen();
+      } catch (_) {
+        alert("Полноэкранный режим недоступен в этом браузере.");
+      }
+    });
+    document.addEventListener("fullscreenchange", () => {
+      fullscreenBtn.textContent = document.fullscreenElement ? "Свернуть" : "На весь экран";
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "PageDown") pageFlip.flipNext();
+      if (event.key === "ArrowLeft" || event.key === "PageUp") pageFlip.flipPrev();
+      if (event.key === "Home") pageFlip.flip(0);
+      if (event.key === "End") pageFlip.flip(pageFlip.getPageCount() - 1);
+    });
+    updateState();
+  </script>
+</body>
+</html>
