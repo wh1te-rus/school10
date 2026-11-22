@@ -227,6 +227,29 @@
       font-weight: 400;
       text-align: center;
     }
+    .title-page-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .title-page-content h1 {
+      max-width: 90%;
+      margin: 0;
+      color: var(--green);
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 58px);
+      font-weight: 400;
+      line-height: 1.15;
+    }
+    .title-page-content p {
+      margin: 20px 0 0;
+      color: #9a7a43;
+      font-family: var(--serif);
+      font-size: clamp(22px, 3vw, 34px);
+      letter-spacing: .16em;
+    }
     .cover-end {
       margin-top: 18px;
       color: #ddc895;
@@ -255,16 +278,30 @@
       min-height: 0;
       margin: 0;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      padding: 8px 8px 10px;
       background: #fffdf7;
       box-shadow: 0 7px 16px rgba(66,48,27,.16);
     }
     .photo-grid figure:nth-child(odd) { transform: rotate(-.35deg); }
     .photo-grid figure:nth-child(even) { transform: rotate(.35deg); }
     .photo-grid img {
+      flex: 1 1 auto;
+      min-height: 0;
       width: 100%;
-      height: 100%;
+      height: 1px;
       display: block;
-      object-fit: cover;
+      object-fit: contain;
+    }
+    .photo-caption {
+      flex: 0 0 auto;
+      color: #665c49;
+      font-family: var(--serif);
+      font-size: clamp(10px, 1.1vw, 14px);
+      line-height: 1.25;
+      text-align: center;
     }
     .photo-grid.one { grid-template-columns: 1fr; }
     .photo-grid.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -414,18 +451,46 @@
         block: "1 БЛОК",
         prefix: "1 БЛОК",
         ext: ["webp","jpg","jpg","jpg","jpeg","jpg","jpg","jpg","jpg","jpeg"],
+        captions: [
+          "Старое здание школы",
+          "Здание школы №10 в Вичуге",
+          "Выпуск 1941 года",
+          "Выпуск 1941 года",
+          "Школьное здание довоенных лет",
+          "Тимуровцы",
+          "Школьные подруги в военные годы",
+          "Ученики в годы войны",
+          "Послевоенное фото учителей",
+          "В День Победы"
+        ],
         count: 10
       },
       {
         block: "2 БЛОК",
         prefix: "2 БЛОК",
         ext: ["webp","jpg","jpg","jpeg","jpeg"],
+        captions: [
+          "Старое здание школы",
+          "Выпуск 1941 года",
+          "Игра «Зарница»",
+          "Школьное здание во время войны — военный госпиталь",
+          "В День Победы"
+        ],
         count: 5
       },
       {
         block: "3 БЛОК",
         prefix: "4 БЛОК",
         ext: ["jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg"],
+        captions: [
+          "Выпускники 2000-х годов",
+          "Выпускники 2000-х годов",
+          "Выпускники 2000-х годов",
+          "Выпускники 2000-х годов",
+          "Выпуск 2013 года",
+          "Выпуск 2021 года",
+          "Выпуск 2024 года"
+        ],
         offset: 0,
         count: 7
       },
@@ -433,6 +498,23 @@
         block: "4 БЛОК",
         prefix: "4 БЛОК",
         ext: ["jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg"],
+        captions: [
+          "Школьная история: 1940-е годы",
+          "Школьная история: 1950-е годы",
+          "Школьная история: 1960-е годы",
+          "Выпускники 1970-х годов",
+          "Выпускники 1970-х годов",
+          "Выпускники 1980-х годов",
+          "Выпускники 1980-х годов",
+          "Выпускники 1980-х годов",
+          "Выпускники 1980-х годов",
+          "Выпускники 1980-х годов",
+          "Выпускники 1990-х годов",
+          "Выпускники 1990-х годов",
+          "Выпускники 1990-х годов",
+          "Выпускники 1990-х годов",
+          "Выпускники 1990-х годов"
+        ],
         offset: 7,
         count: 15
       },
@@ -440,40 +522,62 @@
         block: "6 БЛОК",
         prefix: "6 БЛОК",
         ext: ["jpeg","jpg","jpg","jpg","jpeg","jpg","jpg","jpg","jpg","jpg","jpg","jpg","jpg"],
+        captions: Array(13).fill("Современная школа — школьные мероприятия"),
         count: 13
       },
       {
         block: "7 БЛОК КАПРЕМОНТ",
         prefix: "7 БЛОК КАПРЕМОНТ",
         ext: Array(9).fill("jpg"),
+        captions: Array(9).fill("Капитальный ремонт школы, 2025"),
         count: 9
       },
       {
         block: "8 БЛОК фото родители",
         prefix: "8 БЛОК фото родители",
         ext: Array(12).fill("jpg"),
+        captions: Array(12).fill("Семья и школа — родители на праздниках, субботниках и линейках"),
         count: 12
       }
     ];
 
     const book = document.getElementById("book");
 
-    // Обложка спереди — без текста и декоративных заголовков
+    // Надпись размещена на отдельном листе сразу за обложкой.
     const frontCover = document.createElement("div");
     frontCover.className = "page cover";
     frontCover.dataset.density = "hard";
-    frontCover.innerHTML = `
-      <div class="cover-inner">
-        <h1>Школьный альбом
-          <span>ШКОЛА №10 · ВИЧУГА · 1936—2026</span>
-        </h1>
-      </div>`;
+    frontCover.innerHTML = `<div class="cover-inner"></div>`;
     book.appendChild(frontCover);
 
+    const titlePage = document.createElement("div");
+    titlePage.className = "page";
+    titlePage.innerHTML = `
+      <div class="page-inner title-page-content">
+        <h1>10 школа города Вичуга</h1>
+        <p>1936–2026</p>
+      </div>`;
+    book.appendChild(titlePage);
+
+    // Пустая страница оставляет юбилейную надпись отдельным разворотом.
+    const titleFlyleaf = document.createElement("div");
+    titleFlyleaf.className = "page";
+    titleFlyleaf.setAttribute("aria-hidden", "true");
+    titleFlyleaf.innerHTML = `<div class="page-inner"></div>`;
+    book.appendChild(titleFlyleaf);
+
     const blockRanges = {};
-    let blockPageIndex = 1;
+    let blockPageIndex = 3;
 
     blockSpecs.forEach((spec) => {
+      if (blockPageIndex % 2 === 0) {
+        const dividerPage = document.createElement("div");
+        dividerPage.className = "page";
+        dividerPage.setAttribute("aria-hidden", "true");
+        dividerPage.innerHTML = `<div class="page-inner"></div>`;
+        book.appendChild(dividerPage);
+        blockPageIndex++;
+      }
       blockRanges[spec.block] = blockPageIndex;
       const photos = [];
       const offset = Number(spec.offset || 0);
@@ -487,6 +591,7 @@
       const photosPerPage = 1;
       for (let start = 0; start < photos.length; start += photosPerPage) {
         const group = photos.slice(start, start + photosPerPage);
+        const caption = spec.captions[start] || "";
         const photoClass = group.length === 1 ? "one" : "";
         const page = document.createElement("div");
         page.className = "page";
@@ -497,6 +602,7 @@
               ${group.map((image, imageIndex) => `
                 <figure>
                   <img src="${image}" alt="" draggable="false">
+                  <figcaption class="photo-caption">${caption}</figcaption>
                 </figure>
               `).join("")}
             </div>
@@ -517,18 +623,6 @@
         <button class="close-book-btn" type="button" id="closeBookBtn">Закрыть альбом</button>
       </div>`;
     book.appendChild(backCover);
-
-    /* Старые текстовые разметки страниц не создаются:
-       каждая фотостраница содержит только изображения. */
-
-    /*
-    Параметры ниже используются для выбора первого листа блока.
-    Список оставлен для совместимости со старым счетчиком.
-    */
-    const pages = [];
-    blockSpecs.forEach((spec) => {
-      for (let i = 1; i <= spec.count; i++) pages.push({ block: spec.block });
-    });
 
     // Инициализация StPageFlip
     const pageFlip = new St.PageFlip(book, {
@@ -562,6 +656,10 @@
     const range = document.getElementById("pageRange");
     range.max = pageFlip.getPageCount() - 1;
     let autoFlipTimer = null;
+    let autoFlipActive = false;
+    let autoFlipPending = false;
+    let autoFlipGeneration = 0;
+    let autoFlipSchedule = null;
     let autoStopIndex = pageFlip.getPageCount() - 2;
 
     function getPageElements() {
@@ -619,6 +717,10 @@
     }
 
     function stopAutoFlip() {
+      autoFlipGeneration++;
+      autoFlipActive = false;
+      autoFlipPending = false;
+      autoFlipSchedule = null;
       if (autoFlipTimer) {
         window.clearTimeout(autoFlipTimer);
         autoFlipTimer = null;
@@ -629,8 +731,10 @@
 
     function startAutoFlip() {
       stopAutoFlip();
+      autoFlipActive = true;
       autoFlipBtn.classList.add("is-active");
       autoFlipBtn.textContent = "Авто ■";
+      const generation = autoFlipGeneration;
       const current = pageFlip.getCurrentPageIndex();
       const blockNames = {
         "1": "1 БЛОК",
@@ -647,7 +751,9 @@
 
       if (blockSelect.value === "all") {
         // «Все блоки»: остановиться на последнем листе текущего блока.
-        const stopBlock = activeBlock || getBlockAtIndex(1);
+        const stopBlock = activeBlock || getPageElements()
+          .slice(current)
+          .find((page) => page.dataset.block)?.dataset.block;
         autoStopIndex = stopBlock
           ? getBlockLastIndex(stopBlock)
           : pageFlip.getPageCount() - 2;
@@ -659,6 +765,7 @@
       }
 
       const scheduleNextFlip = () => {
+        if (generation !== autoFlipGeneration) return;
         const current = pageFlip.getCurrentPageIndex();
         const last = pageFlip.getPageCount() - 1;
         if (current >= autoStopIndex || current >= last) {
@@ -667,17 +774,23 @@
           const portrait = pageFlip.getOrientation() === "portrait";
           const step = portrait ? 1 : 2;
           const nextIndex = current + step;
-          if (nextIndex >= autoStopIndex) {
-            pageFlip.flip(autoStopIndex);
+          if (nextIndex > autoStopIndex) {
             stopAutoFlip();
-          } else {
-            pageFlip.flipNext();
-            const requestedDelay = Number(flipTiming.value);
-            const safeDelay = Math.max(requestedDelay, 800);
-            autoFlipTimer = window.setTimeout(scheduleNextFlip, safeDelay);
+            return;
           }
+          pageFlip.flipNext();
+          const requestedDelay = Number(flipTiming.value);
+          const safeDelay = Math.max(requestedDelay, 800) + 150;
+          autoFlipTimer = window.setTimeout(() => {
+            if (generation === autoFlipGeneration) scheduleNextFlip();
+          }, safeDelay);
         }
       };
+      autoFlipSchedule = scheduleNextFlip;
+      if (pageFlip.getState() !== "read") {
+        autoFlipPending = true;
+        return;
+      }
       scheduleNextFlip();
     }
 
@@ -685,8 +798,11 @@
       const index = pageFlip.getCurrentPageIndex();
       const count = pageFlip.getPageCount();
       const indexSafe = Math.max(0, index);
+      const pageElements = getPageElements();
+      const photoPages = pageElements.filter((page) => page.dataset.block);
+      const photoPageCount = photoPages.length;
 
-      if (autoFlipTimer && indexSafe >= autoStopIndex) {
+      if (autoFlipActive && !autoFlipPending && indexSafe >= autoStopIndex) {
         stopAutoFlip();
       }
 
@@ -697,31 +813,49 @@
       const portrait = pageFlip.getOrientation() === "portrait";
       if (indexSafe === 0) {
         counter.textContent = "Обложка";
+      } else if (indexSafe === 1) {
+        counter.textContent = "Юбилейный титул";
       } else if (indexSafe === count - 1) {
         counter.textContent = "Задняя обложка";
-      } else if (portrait) {
-        const photoPageCount = count - 2;
-        const pageNumber = Math.min(Math.max(indexSafe - 1, 1), photoPageCount);
-        counter.textContent = `Лист ${pageNumber} из ${photoPageCount}`;
       } else {
-        const photoPageCount = count - 2;
-        const left = Math.min(Math.max(indexSafe - 1, 1), photoPageCount);
-        const right = Math.min(left + 1, photoPageCount);
-        counter.textContent = `Листы ${left}–${right} из ${photoPageCount}`;
+        const visiblePages = portrait
+          ? [pageElements[indexSafe]]
+          : [pageElements[indexSafe], pageElements[indexSafe + 1]];
+        const visiblePhotoNumbers = visiblePages
+          .filter((page) => page && page.dataset.block)
+          .map((page) => photoPages.indexOf(page) + 1);
+        if (visiblePhotoNumbers.length) {
+          const first = visiblePhotoNumbers[0];
+          const last = visiblePhotoNumbers[visiblePhotoNumbers.length - 1];
+          counter.textContent = first === last
+            ? `Лист ${first} из ${photoPageCount}`
+            : `Листы ${first}–${last} из ${photoPageCount}`;
+        } else {
+          const previousPhotoNumber = photoPages.filter((page) => pageElements.indexOf(page) < indexSafe).length;
+          counter.textContent = previousPhotoNumber
+            ? `Разворот · лист ${previousPhotoNumber} из ${photoPageCount}`
+            : "Школьный альбом";
+        }
       }
     }
 
     pageFlip.on("flip", updateState);
     pageFlip.on("changeOrientation", updateState);
-    pageFlip.on("changeState", updateState);
+    pageFlip.on("changeState", () => {
+      updateState();
+      if (autoFlipPending && pageFlip.getState() === "read") {
+        autoFlipPending = false;
+        if (autoFlipSchedule) autoFlipSchedule();
+      }
+    });
     prevBtn.addEventListener("click", () => pageFlip.flipPrev());
     nextBtn.addEventListener("click", () => pageFlip.flipNext());
     startBtn.addEventListener("click", () => pageFlip.flip(0));
-    range.addEventListener("input", () => pageFlip.flip(Number(range.value)));
+    range.addEventListener("input", () => pageFlip.turnToPage(Number(range.value)));
     blockSelect.addEventListener("change", () => {
       stopAutoFlip();
       if (blockSelect.value === "all") {
-        pageFlip.flip(1);
+        pageFlip.turnToPage(1);
       } else {
         const blockNames = {
           "1": "1 БЛОК",
@@ -732,19 +866,19 @@
           "7": "7 БЛОК КАПРЕМОНТ",
           "8": "8 БЛОК фото родители"
         };
-        pageFlip.flip(getBlockStartIndex(blockNames[blockSelect.value]));
+        pageFlip.turnToPage(getBlockStartIndex(blockNames[blockSelect.value]));
       }
     });
     flipTiming.addEventListener("input", () => {
       const milliseconds = Number(flipTiming.value);
       timingValue.textContent = `${(milliseconds / 1000).toFixed(1).replace(".0", "")} с`;
-      if (autoFlipTimer) startAutoFlip();
+      if (autoFlipActive) startAutoFlip();
       if (typeof pageFlip.update === "function") {
         pageFlip.update({ flippingTime: milliseconds });
       }
     });
     autoFlipBtn.addEventListener("click", () => {
-      if (autoFlipTimer) stopAutoFlip();
+      if (autoFlipActive) stopAutoFlip();
       else startAutoFlip();
     });
     document.getElementById("closeBookBtn").addEventListener("click", (event) => {
