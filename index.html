@@ -547,8 +547,18 @@
     const frontCover = document.createElement("div");
     frontCover.className = "page cover";
     frontCover.dataset.density = "hard";
-    frontCover.innerHTML = `<div class="cover-inner"></div>`;
+    frontCover.innerHTML = `
+      <div class="cover-inner">
+        <h1>Школьный альбом</h1>
+      </div>`;
     book.appendChild(frontCover);
+
+    // Пустая левая страница оставляет юбилейную надпись на правой стороне разворота.
+    const titleFlyleaf = document.createElement("div");
+    titleFlyleaf.className = "page";
+    titleFlyleaf.setAttribute("aria-hidden", "true");
+    titleFlyleaf.innerHTML = `<div class="page-inner"></div>`;
+    book.appendChild(titleFlyleaf);
 
     const titlePage = document.createElement("div");
     titlePage.className = "page";
@@ -558,13 +568,6 @@
         <p>1936–2026</p>
       </div>`;
     book.appendChild(titlePage);
-
-    // Пустая страница оставляет юбилейную надпись отдельным разворотом.
-    const titleFlyleaf = document.createElement("div");
-    titleFlyleaf.className = "page";
-    titleFlyleaf.setAttribute("aria-hidden", "true");
-    titleFlyleaf.innerHTML = `<div class="page-inner"></div>`;
-    book.appendChild(titleFlyleaf);
 
     const blockRanges = {};
     let blockPageIndex = 3;
