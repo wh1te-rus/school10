@@ -721,11 +721,19 @@
       }
     });
 
+    if (book.children.length % 2 === 1) {
+      const endFlyleaf = document.createElement("div");
+      endFlyleaf.className = "page";
+      endFlyleaf.setAttribute("aria-hidden", "true");
+      endFlyleaf.innerHTML = '<div class="page-inner"></div>';
+      book.appendChild(endFlyleaf);
+    }
+
     const historyContinuesPage = document.createElement("div");
     historyContinuesPage.className = "page";
     historyContinuesPage.innerHTML = `
       <div class="page-inner title-page-content">
-        <h1>История продолжается</h1>
+        <h1>История продолжается…</h1>
       </div>`;
     book.appendChild(historyContinuesPage);
 
@@ -735,6 +743,7 @@
     backCover.dataset.density = "hard";
     backCover.innerHTML = "";
     book.appendChild(backCover);
+    console.log(book.children.length);
 
     // Инициализация StPageFlip
     const pageFlip = new St.PageFlip(book, {
