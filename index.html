@@ -277,16 +277,57 @@
       min-width: 0;
       min-height: 0;
       margin: 0;
+      position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       gap: 7px;
-      padding: 8px 8px 10px;
-      background: #fffdf7;
-      box-shadow: 0 7px 16px rgba(66,48,27,.16);
+      padding: 10px 10px 12px;
+      background:
+        radial-gradient(circle at 8px 8px, #30241c 0 4px, transparent 4.5px),
+        radial-gradient(circle at calc(100% - 8px) 8px, #30241c 0 4px, transparent 4.5px),
+        radial-gradient(circle at 8px calc(100% - 8px), #30241c 0 4px, transparent 4.5px),
+        radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), #30241c 0 4px, transparent 4.5px),
+        linear-gradient(135deg, rgba(255,255,255,.48), transparent 18%, rgba(126,94,55,.07) 72%, transparent),
+        #fffaf0;
+      border: 1px solid rgba(113,91,58,.28);
+      box-shadow:
+        0 9px 18px rgba(66,48,27,.22),
+        inset 0 0 12px rgba(122,93,52,.08);
+      clip-path: polygon(
+        2% 0, 7% 1%, 13% 0, 19% 1%, 26% 0, 33% 1%, 41% 0,
+        49% 1%, 57% 0, 65% 1%, 73% 0, 81% 1%, 89% 0, 96% 1%, 100% 0,
+        99% 8%, 100% 16%, 99% 24%, 100% 33%, 99% 42%, 100% 51%,
+        99% 60%, 100% 69%, 99% 78%, 100% 87%, 99% 96%, 100% 100%,
+        94% 99%, 87% 100%, 79% 99%, 71% 100%, 63% 99%, 55% 100%,
+        47% 99%, 39% 100%, 31% 99%, 23% 100%, 15% 99%, 7% 100%, 0 99%,
+        1% 91%, 0 82%, 1% 73%, 0 64%, 1% 55%, 0 46%, 1% 37%, 0 28%, 1% 19%, 0 10%
+      );
     }
     .photo-grid figure:nth-child(odd) { transform: rotate(-.35deg); }
     .photo-grid figure:nth-child(even) { transform: rotate(.35deg); }
+    .photo-grid figure::before,
+    .photo-grid figure::after {
+      content: "";
+      position: absolute;
+      z-index: 3;
+      width: 26px;
+      height: 26px;
+      pointer-events: none;
+      background: linear-gradient(135deg, #241b16 0 58%, #4a3829 59% 68%, transparent 69%);
+      filter: drop-shadow(1px 1px 1px rgba(0,0,0,.25));
+    }
+    .photo-grid figure::before {
+      top: 7px;
+      left: 7px;
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+    }
+    .photo-grid figure::after {
+      right: 7px;
+      bottom: 7px;
+      transform: rotate(180deg);
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+    }
     .photo-grid img {
       flex: 1 1 auto;
       min-height: 0;
@@ -294,6 +335,9 @@
       height: 1px;
       display: block;
       object-fit: contain;
+      border: 1px solid rgba(91,68,40,.18);
+      background: #f8f2df;
+      box-shadow: inset 0 0 8px rgba(83,61,36,.12);
     }
     .photo-caption {
       flex: 0 0 auto;
@@ -301,6 +345,7 @@
       font-family: var(--serif);
       font-size: clamp(10px, 1.1vw, 14px);
       line-height: 1.25;
+      font-style: italic;
       text-align: center;
     }
     .photo-grid.one { grid-template-columns: 1fr; }
@@ -500,29 +545,29 @@
         files: Array.from({ length: 22 }, (_, i) =>
           `block-4 БЛОК-photo-${String(i + 1).padStart(2, "0")}.${i === 3 ? "jpg" : "jpeg"}`
         ),
-        sourceNames: [
-          "40-Е ГОДЫ..jpeg",
-          "50-Е ГОДЫ..jpeg",
-          "60-Е ГОДЫ..jpeg",
-          "70-е годы 1.jpg",
-          "70-е годы 2.jpeg",
-          "80-е годы 1..jpeg",
-          "80-е годы 2..jpeg",
-          "80-е годы 3..jpeg",
-          "80-е годы 5.jpeg",
-          "80-е годы 6.jpeg",
-          "90-е годы 1..jpeg",
-          "90-е годы 2..jpeg",
-          "90-е годы 3..jpeg",
-          "90-е годы 4..jpeg",
-          "90-е годы 5..jpeg",
-          "2000-е годы 1..jpeg",
-          "2000-е годы 2..jpeg",
-          "2000-е годы 3..jpeg",
-          "2000-е годы 4..jpeg",
-          "2013..jpeg",
-          "2021..jpeg",
-          "2024..jpeg"
+        captions: [
+          "40-е годы",
+          "50-е годы",
+          "60-е годы",
+          "70-е годы",
+          "70-е годы",
+          "80-е годы",
+          "80-е годы",
+          "80-е годы",
+          "80-е годы",
+          "80-е годы",
+          "90-е годы",
+          "90-е годы",
+          "90-е годы",
+          "90-е годы",
+          "90-е годы",
+          "2000-е годы",
+          "2000-е годы",
+          "2000-е годы",
+          "2000-е годы",
+          "Выпуск 2013 года",
+          "Выпуск 2021 года",
+          "Выпуск 2024 года"
         ],
         count: 22
       },
@@ -578,7 +623,7 @@
     titlePage.className = "page";
     titlePage.innerHTML = `
       <div class="page-inner title-page-content">
-        <h1>10 школа города Вичуга</h1>
+        <h1>10 школа города Вичуги</h1>
         <p>1936–2026</p>
       </div>`;
     book.appendChild(titlePage);
