@@ -284,10 +284,10 @@
       gap: 7px;
       padding: 10px 10px 12px;
       background:
-        radial-gradient(circle at 8px 8px, #30241c 0 4px, transparent 4.5px),
-        radial-gradient(circle at calc(100% - 8px) 8px, #30241c 0 4px, transparent 4.5px),
-        radial-gradient(circle at 8px calc(100% - 8px), #30241c 0 4px, transparent 4.5px),
-        radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), #30241c 0 4px, transparent 4.5px),
+        linear-gradient(135deg, #241b16 0 18px, transparent 19px) top 7px left 7px / 42px 42px no-repeat,
+        linear-gradient(225deg, #241b16 0 18px, transparent 19px) top 7px right 7px / 42px 42px no-repeat,
+        linear-gradient(45deg, #241b16 0 18px, transparent 19px) bottom 7px left 7px / 42px 42px no-repeat,
+        linear-gradient(315deg, #241b16 0 18px, transparent 19px) bottom 7px right 7px / 42px 42px no-repeat,
         linear-gradient(135deg, rgba(255,255,255,.48), transparent 18%, rgba(126,94,55,.07) 72%, transparent),
         #fffaf0;
       border: 1px solid rgba(113,91,58,.28);
@@ -306,28 +306,6 @@
     }
     .photo-grid figure:nth-child(odd) { transform: rotate(-.35deg); }
     .photo-grid figure:nth-child(even) { transform: rotate(.35deg); }
-    .photo-grid figure::before,
-    .photo-grid figure::after {
-      content: "";
-      position: absolute;
-      z-index: 3;
-      width: 26px;
-      height: 26px;
-      pointer-events: none;
-      background: linear-gradient(135deg, #241b16 0 58%, #4a3829 59% 68%, transparent 69%);
-      filter: drop-shadow(1px 1px 1px rgba(0,0,0,.25));
-    }
-    .photo-grid figure::before {
-      top: 7px;
-      left: 7px;
-      clip-path: polygon(0 0, 100% 0, 0 100%);
-    }
-    .photo-grid figure::after {
-      right: 7px;
-      bottom: 7px;
-      transform: rotate(180deg);
-      clip-path: polygon(0 0, 100% 0, 0 100%);
-    }
     .photo-grid img {
       flex: 1 1 auto;
       min-height: 0;
