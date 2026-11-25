@@ -422,7 +422,6 @@
           <option value="all">Все блоки</option>
           <option value="1">Блок 1</option>
           <option value="2">Блок 2</option>
-          <option value="3">Блок 3</option>
           <option value="4">Блок 4</option>
           <option value="6">Блок 6</option>
           <option value="7">Блок 7</option>
@@ -450,92 +449,107 @@
       {
         block: "1 БЛОК",
         prefix: "1 БЛОК",
-        ext: ["webp","jpg","jpg","jpg","jpeg","jpg","jpg","jpg","jpg","jpeg"],
-        captions: [
-          "Старое здание школы",
-          "Здание школы №10 в Вичуге",
-          "Выпуск 1941 года",
-          "Выпуск 1941 года",
-          "Школьное здание довоенных лет",
-          "Тимуровцы",
-          "Школьные подруги в военные годы",
-          "Ученики в годы войны",
-          "Послевоенное фото учителей",
-          "В День Победы"
+        files: [
+          "block-1 БЛОК-photo-01.webp",
+          "block-1 БЛОК-photo-02.jpg",
+          "block-1 БЛОК-photo-03.jpg",
+          "block-1 БЛОК-photo-04.jpeg",
+          "block-1 БЛОК-photo-05.jpg",
+          "block-1 БЛОК-photo-06.jpg",
+          "block-1 БЛОК-photo-07.jpg",
+          "block-1 БЛОК-photo-08.jpg",
+          "block-1 БЛОК-photo-09.jpeg",
+          "block-1 БЛОК-photo-10.jpg"
+        ],
+        sourceNames: [
+          "1. старое здание школы.webp",
+          "2. Выпуск 1941 года 2.jpg",
+          "3. Выпуск 1941 года.jpg",
+          "4. ФОТО ШКОЛЫ.jpeg",
+          "5. Тимуровцы.jpg",
+          "6. Школьные подруги в военные годы.jpg",
+          "7. Ученики в годы войны.jpg",
+          "8. Послевоенное фото учителей.jpg",
+          "9. В День Победы..jpeg",
+          "10. Здание школы.jpg"
         ],
         count: 10
       },
       {
         block: "2 БЛОК",
         prefix: "2 БЛОК",
-        ext: ["webp","jpg","jpg","jpeg","jpeg"],
-        captions: [
-          "Старое здание школы",
-          "Выпуск 1941 года",
-          "Игра «Зарница»",
-          "Школьное здание во время войны — военный госпиталь",
-          "В День Победы"
+        files: [
+          "block-2 БЛОК-photo-01.webp",
+          "block-2 БЛОК-photo-02.jpg",
+          "block-2 БЛОК-photo-03.jpg",
+          "block-2 БЛОК-photo-04.jpeg",
+          "block-2 БЛОК-photo-05.jpeg"
+        ],
+        sourceNames: [
+          "1. старое здание школы.webp",
+          "2. Выпуск 1941 года 2.jpg",
+          "3. Игра Зарница.jpg",
+          "4. Госпиталь..jpeg",
+          "5. В День Победы..jpeg"
         ],
         count: 5
       },
       {
-        block: "3 БЛОК",
-        prefix: "4 БЛОК",
-        ext: ["jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg"],
-        captions: [
-          "Выпускники 2000-х годов",
-          "Выпускники 2000-х годов",
-          "Выпускники 2000-х годов",
-          "Выпускники 2000-х годов",
-          "Выпуск 2013 года",
-          "Выпуск 2021 года",
-          "Выпуск 2024 года"
-        ],
-        offset: 0,
-        count: 7
-      },
-      {
         block: "4 БЛОК",
         prefix: "4 БЛОК",
-        ext: ["jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg","jpeg"],
-        captions: [
-          "Школьная история: 1940-е годы",
-          "Школьная история: 1950-е годы",
-          "Школьная история: 1960-е годы",
-          "Выпускники 1970-х годов",
-          "Выпускники 1970-х годов",
-          "Выпускники 1980-х годов",
-          "Выпускники 1980-х годов",
-          "Выпускники 1980-х годов",
-          "Выпускники 1980-х годов",
-          "Выпускники 1980-х годов",
-          "Выпускники 1990-х годов",
-          "Выпускники 1990-х годов",
-          "Выпускники 1990-х годов",
-          "Выпускники 1990-х годов",
-          "Выпускники 1990-х годов"
+        files: Array.from({ length: 22 }, (_, i) =>
+          `block-4 БЛОК-photo-${String(i + 1).padStart(2, "0")}.${i === 3 ? "jpg" : "jpeg"}`
+        ),
+        sourceNames: [
+          "40-Е ГОДЫ..jpeg",
+          "50-Е ГОДЫ..jpeg",
+          "60-Е ГОДЫ..jpeg",
+          "70-е годы 1.jpg",
+          "70-е годы 2.jpeg",
+          "80-е годы 1..jpeg",
+          "80-е годы 2..jpeg",
+          "80-е годы 3..jpeg",
+          "80-е годы 5.jpeg",
+          "80-е годы 6.jpeg",
+          "90-е годы 1..jpeg",
+          "90-е годы 2..jpeg",
+          "90-е годы 3..jpeg",
+          "90-е годы 4..jpeg",
+          "90-е годы 5..jpeg",
+          "2000-е годы 1..jpeg",
+          "2000-е годы 2..jpeg",
+          "2000-е годы 3..jpeg",
+          "2000-е годы 4..jpeg",
+          "2013..jpeg",
+          "2021..jpeg",
+          "2024..jpeg"
         ],
-        offset: 7,
-        count: 15
+        count: 22
       },
       {
         block: "6 БЛОК",
         prefix: "6 БЛОК",
-        ext: ["jpeg","jpg","jpg","jpg","jpeg","jpg","jpg","jpg","jpg","jpg","jpg","jpg","jpg"],
+        files: Array.from({ length: 13 }, (_, i) =>
+          `block-6 БЛОК-photo-${String(i + 1).padStart(2, "0")}.${i === 0 || i === 12 ? "jpeg" : "jpg"}`
+        ),
         captions: Array(13).fill("Современная школа — школьные мероприятия"),
         count: 13
       },
       {
         block: "7 БЛОК КАПРЕМОНТ",
         prefix: "7 БЛОК КАПРЕМОНТ",
-        ext: Array(9).fill("jpg"),
+        files: Array.from({ length: 9 }, (_, i) =>
+          `block-7 БЛОК КАПРЕМОНТ-photo-${String(i + 1).padStart(2, "0")}.jpg`
+        ),
         captions: Array(9).fill("Капитальный ремонт школы, 2025"),
         count: 9
       },
       {
         block: "8 БЛОК фото родители",
         prefix: "8 БЛОК фото родители",
-        ext: Array(12).fill("jpg"),
+        files: Array.from({ length: 12 }, (_, i) =>
+          `block-8 БЛОК фото родители-photo-${String(i + 1).padStart(2, "0")}.jpg`
+        ),
         captions: Array(12).fill("Семья и школа — родители на праздниках, субботниках и линейках"),
         count: 12
       }
@@ -582,19 +596,19 @@
         blockPageIndex++;
       }
       blockRanges[spec.block] = blockPageIndex;
-      const photos = [];
-      const offset = Number(spec.offset || 0);
-      for (let i = offset + 1; i <= offset + spec.count; i++) {
-        const number = String(i).padStart(2, "0");
-        const fileName = `block-${spec.prefix}-photo-${number}.${spec.ext[i - 1]}`;
-        photos.push(`assets/${fileName}`);
-      }
+      const photos = spec.files.map((fileName) => `assets/${fileName}`);
 
       // Каждая фотография размещается на отдельном листе.
       const photosPerPage = 1;
       for (let start = 0; start < photos.length; start += photosPerPage) {
         const group = photos.slice(start, start + photosPerPage);
-        const caption = spec.captions[start] || "";
+        let caption = spec.captions ? spec.captions[start] : "";
+        if (spec.sourceNames && spec.sourceNames[start]) {
+          caption = spec.sourceNames[start]
+            .replace(/\.[^.]+$/, "")
+            .replace(/^\d+\.\s*/, "")
+            .replace(/[.\s]+$/, "");
+        }
         const photoClass = group.length === 1 ? "one" : "";
         const page = document.createElement("div");
         page.className = "page";
@@ -615,16 +629,19 @@
       }
     });
 
+    const historyContinuesPage = document.createElement("div");
+    historyContinuesPage.className = "page";
+    historyContinuesPage.innerHTML = `
+      <div class="page-inner title-page-content">
+        <h1>История продолжается</h1>
+      </div>`;
+    book.appendChild(historyContinuesPage);
+
     // Обложка сзади без текста
     const backCover = document.createElement("div");
     backCover.className = "page cover back-cover";
     backCover.dataset.density = "hard";
-    backCover.innerHTML = `
-      <div class="cover-inner">
-        <h2>Конец альбома</h2>
-        <div class="cover-end">История продолжается</div>
-        <button class="close-book-btn" type="button" id="closeBookBtn">Закрыть альбом</button>
-      </div>`;
+    backCover.innerHTML = "";
     book.appendChild(backCover);
 
     // Инициализация StPageFlip
@@ -742,7 +759,6 @@
       const blockNames = {
         "1": "1 БЛОК",
         "2": "2 БЛОК",
-        "3": "3 БЛОК",
         "4": "4 БЛОК",
         "6": "6 БЛОК",
         "7": "7 БЛОК КАПРЕМОНТ",
@@ -863,7 +879,6 @@
         const blockNames = {
           "1": "1 БЛОК",
           "2": "2 БЛОК",
-          "3": "3 БЛОК",
           "4": "4 БЛОК",
           "6": "6 БЛОК",
           "7": "7 БЛОК КАПРЕМОНТ",
@@ -883,11 +898,6 @@
     autoFlipBtn.addEventListener("click", () => {
       if (autoFlipActive) stopAutoFlip();
       else startAutoFlip();
-    });
-    document.getElementById("closeBookBtn").addEventListener("click", (event) => {
-      event.stopPropagation();
-      stopAutoFlip();
-      pageFlip.flip(0);
     });
 
     fullscreenBtn.addEventListener("click", async () => {
